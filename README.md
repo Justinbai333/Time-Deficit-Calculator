@@ -5,7 +5,9 @@ This is a program that counts the time deficit clocks would experience due to sp
 It uses for loop to calculate midpoint Riemann sum of the desired integration. 
 
 It can be used for two cases:
+
 (i) Calculating the time deficit a clock on the earth would experience annually.
+
 (ii) Calculating the time deficit a clock on a satellite orbiting around earth at certain fixed radius would experience annually.
 
 All physics formulus used in this program are covered in PHYS 211, 214, 225 of UIUC physics curriculum.
