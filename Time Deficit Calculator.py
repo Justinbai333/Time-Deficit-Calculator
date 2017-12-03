@@ -24,7 +24,7 @@ Note: all numbers are in SI units, ie (kg for mass, s for time, m for length)
 #------------------------------------------
 # Below is the part for importing necessary libraries.
 import numpy as np
-
+import sys
 
 #------------------------------------------
 # Below is the preperation part before we do the integral. 
@@ -41,14 +41,6 @@ c = 299792458
 # m is set to be one for convenience, in fact, mass of the satellite would cancel itself during calculation
 m = 1
 
-# rmax is the radius of the orbit of the satellite (which we assme larger than that of earth)
-# this number can be changed to whatever number needed
-rmax = 2.355e7
-
-# v_circle denotes the velocity of the satellite
-# here we can just use sqrt(G*m/r) since mass of satellite is negeligible compare to mass of the earth
-v_satellite = np.sqrt(G * earth_mass / rmax)
-
 # T_earth is just one day, aka the time for earth to complete a full rotation
 T_earth = 24*60*60
 
@@ -58,11 +50,34 @@ omega_earth = 2*np.pi/T_earth
 # v_earth denotes the velocity of the earth
 v_earth = omega_earth*earth_radius
 
+# Ask if users want to calculate the result for equatorial clock or satellite
+choice = int(input("(1) equatorial clock | (2) satellite clock: "))
+while choice != 1 and int(choice) != 2:
+        print("Select 1 or 2 to pick the type of clock.")
+        choice = int(input("(1) equatorial clock | (2) satellite clock: "))
+
+# rmax is the radius of the orbit of the satellite (which we assme larger than that of earth)
+# this number can be changed to whatever number needed
+if choice == 2:
+        radius = input("Satellite Radius = ")
+        while float(radius) < earth_radius:
+                print("Please input a radius greater than the Earth's radius (6.371e6).")
+                radius = input("Satellite Radius = ")
+        rmax = float(radius)
+
+        # v_circle denotes the velocity of the satellite
+        # here we can just use sqrt(G*m/r) since mass of satellite is negeligible compare to mass of the earth
+        v_satellite = np.sqrt(G * earth_mass / rmax)
+
 # here we set the initial coordinates for the clock on earth (or the satellite)
-# (i) use x = earth_radius for the earth
-# (ii)use x=rmax for satellite 
-x = rmax
-y = 0
+# (i) use x = earth_radius for the earth if equatorial
+# (ii)use x=rmax for satellite if satellite
+if choice == 1:
+        x = earth_radius
+        y = 0
+else:
+        x = rmax
+        y = 0
 
 # t_max denote the time period in which time deficit takes place.
 # Here I choose t_max to be one day instead of 365 days, I will time a factor of 365 in the end.
@@ -76,8 +91,12 @@ dt = 1
 # Define initial velocities for clocks
 # (i) use v_y = v_earth for the earth
 # (ii) use v_y = v_satellite for the satellite
-v_x = 0
-v_y = v_satellite
+if choice == 1:
+        v_x = 0
+        v_y = v_earth
+else:
+        v_x = 0
+        v_y = v_satellite
 
 # following parameters are to be used in the for-loop but are unknown currently
 # so they are set to 0 just for initialization
@@ -97,7 +116,7 @@ t_sgrc = 0
 dt_sgrc = 0
 
 # create arrays to input total amount of change of time under correction by SR or GR or both.
-number_of_time_slices = round (t_max/dt)
+number_of_time_slices = t_max/dt
 
 t_grc_array = np.empty(number_of_time_slices)
 t_src_array = np.empty(number_of_time_slices)
@@ -138,9 +157,9 @@ for i in range (0,number_of_time_slices):
 
     dt_grc = dt-dt*np.sqrt(1-0.00887/r) 
     
-    dt_src = dt - dt*np.sqrt(1-v**2/c**2)
+    dt_src = dt - dt*np.sqrt(abs(1-v**2/c**2))
     
-    dt_sgrc = dt - dt*np.sqrt(1-v**2/c**2)*np.sqrt(1-0.00887/r)    
+    dt_sgrc = dt - dt*np.sqrt(abs(1-v**2/c**2))*np.sqrt(1-0.00887/r)    
 
     t_grc = t_grc + dt_grc
     
@@ -156,11 +175,16 @@ for i in range (0,number_of_time_slices):
     
 # Here I print out the desired values (Which would change correspondingly for different clocks)
 # I time every number by a factor of 365 since the for-loop only integrates through one day
-print("Under special relativistic correction. equitorial clock / satellite clock annual deficit is", 
+if choice == 1:
+        clock_type = "equitorial clock"
+else:
+        clock_type = "satellite clock"
+
+print("Under special relativistic correction. " + clock_type +  " annual deficit is", 
       t_src_array[number_of_time_slices-1]*365)
-print("Under general relativistic correction. equitorial clock / satellite clock annual deficit is", 
+print("Under general relativistic correction. " + clock_type + " annual deficit is", 
       t_grc_array[number_of_time_slices-1]*365)
-print("Under special and general relativistic correction. equitorial clock / satellite clock annual deficit is", 
+print("Under special and general relativistic correction. " + clock_type + " annual deficit is", 
       t_sgrc_array[number_of_time_slices-1]*365)
 
 
