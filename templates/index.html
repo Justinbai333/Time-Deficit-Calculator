@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Time Deficit Calculator</title>
+        </head>
+        <body>
+                <form action="/" method="GET">
+                        <input type="radio" name="clock_type" value="equatorial"> Equatorial Clock <br/>
+                        <input type="radio" name="clock_type" value="satellite"> Satellite Clock <br/> <br/>
+                        Satellite Radius: <input name="radius" type="text"> <br/> <br/>
+                        <input type="submit" value="Submit"> <br/> <br/>
+
+                        {% if clock_type %}
+                                <h2>Time Deficit Results</h2>
+
+                                Special Relativity: {{results[0]}} <br/>
+                                General Relativity: {{results[1]}} <br/>
+                                Special and General Relativity: {{results[2]}} <br/>
+                        {% elif error %}
+                                {{error}}
+                        {% endif %}
+                </form>
+        </body>                
+</html>

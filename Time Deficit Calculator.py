@@ -15,7 +15,7 @@ All physics formulus used in this program are covered in PHYS 211, 214, 225 of U
 Users of this program are assumed to own basic knowledge of classical mechanics and relativity.
 Program is designed only for calculation use, not for the study of physics.
 
-@author: Justin Bai(jinbai2), Brian Yang()
+@author: Justin Bai(jinbai2), Brian Yang(brian-yang)
 
 Note: all numbers are in SI units, ie (kg for mass, s for time, m for length)
 
@@ -24,7 +24,6 @@ Note: all numbers are in SI units, ie (kg for mass, s for time, m for length)
 #------------------------------------------
 # Below is the part for importing necessary libraries.
 import numpy as np
-import sys
 
 #------------------------------------------
 # Below is the preperation part before we do the integral. 
@@ -59,11 +58,11 @@ while choice != 1 and int(choice) != 2:
 # rmax is the radius of the orbit of the satellite (which we assme larger than that of earth)
 # this number can be changed to whatever number needed
 if choice == 2:
-        radius = input("Satellite Radius = ")
-        while float(radius) < earth_radius:
+        radius = float(input("Satellite Radius = "))
+        while radius < earth_radius:
                 print("Please input a radius greater than the Earth's radius (6.371e6).")
-                radius = input("Satellite Radius = ")
-        rmax = float(radius)
+                radius = float(input("Satellite Radius = "))
+        rmax = radius
 
         # v_circle denotes the velocity of the satellite
         # here we can just use sqrt(G*m/r) since mass of satellite is negeligible compare to mass of the earth
@@ -75,7 +74,7 @@ if choice == 2:
 if choice == 1:
         x = earth_radius
         y = 0
-else:
+elif choice == 2:
         x = rmax
         y = 0
 
@@ -94,7 +93,7 @@ dt = 1
 if choice == 1:
         v_x = 0
         v_y = v_earth
-else:
+elif choice == 2:
         v_x = 0
         v_y = v_satellite
 
@@ -177,7 +176,7 @@ for i in range (0,number_of_time_slices):
 # I time every number by a factor of 365 since the for-loop only integrates through one day
 if choice == 1:
         clock_type = "equitorial clock"
-else:
+elif choice == 2:
         clock_type = "satellite clock"
 
 print("Under special relativistic correction. " + clock_type +  " annual deficit is", 
