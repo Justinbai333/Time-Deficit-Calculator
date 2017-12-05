@@ -115,7 +115,7 @@ t_sgrc = 0
 dt_sgrc = 0
 
 # create arrays to input total amount of change of time under correction by SR or GR or both.
-number_of_time_slices = t_max/dt
+number_of_time_slices = int(t_max/dt)
 
 t_grc_array = np.empty(number_of_time_slices)
 t_src_array = np.empty(number_of_time_slices)
