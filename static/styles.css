@@ -1,0 +1,12 @@
+body {
+        text-align: center;
+        background: url("clock_background.jpg");
+}
+
+table, th, td {
+        border: 1px solid black;
+}
+
+table {
+        margin: 0px auto;
+}
